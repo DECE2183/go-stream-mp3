@@ -17,11 +17,11 @@ package maindata
 import (
 	"fmt"
 
-	"github.com/dece/go-stream-mp3/internal/bits"
-	"github.com/dece/go-stream-mp3/internal/consts"
-	"github.com/dece/go-stream-mp3/internal/frameheader"
-	"github.com/dece/go-stream-mp3/internal/huffman"
-	"github.com/dece/go-stream-mp3/internal/sideinfo"
+	"github.com/dece2183/go-stream-mp3/internal/bits"
+	"github.com/dece2183/go-stream-mp3/internal/consts"
+	"github.com/dece2183/go-stream-mp3/internal/frameheader"
+	"github.com/dece2183/go-stream-mp3/internal/huffman"
+	"github.com/dece2183/go-stream-mp3/internal/sideinfo"
 )
 
 func readHuffman(m *bits.Bits, header frameheader.FrameHeader, sideInfo *sideinfo.SideInfo, mainData *MainData, part_2_start, gr, ch int) error {

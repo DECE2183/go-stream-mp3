@@ -22,7 +22,7 @@ import (
 
 	"github.com/hajimehoshi/oto/v2"
 
-	mp3 "github.com/dece/go-stream-mp3"
+	mp3 "github.com/dece2183/go-stream-mp3"
 )
 
 func run() error {

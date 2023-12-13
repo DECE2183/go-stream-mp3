@@ -18,9 +18,9 @@ import (
 	"errors"
 	"io"
 
-	"github.com/dece/go-stream-mp3/internal/consts"
-	"github.com/dece/go-stream-mp3/internal/frame"
-	"github.com/dece/go-stream-mp3/internal/frameheader"
+	"github.com/dece2183/go-stream-mp3/internal/consts"
+	"github.com/dece2183/go-stream-mp3/internal/frame"
+	"github.com/dece2183/go-stream-mp3/internal/frameheader"
 )
 
 // A Decoder is a MP3-decoded stream.

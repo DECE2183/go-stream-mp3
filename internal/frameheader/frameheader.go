@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/dece/go-stream-mp3/internal/consts"
+	"github.com/dece2183/go-stream-mp3/internal/consts"
 )
 
 // A mepg1FrameHeader is MPEG1 Layer 1-3 frame header

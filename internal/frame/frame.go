@@ -19,12 +19,12 @@ import (
 	"io"
 	"math"
 
-	"github.com/dece/go-stream-mp3/internal/bits"
-	"github.com/dece/go-stream-mp3/internal/consts"
-	"github.com/dece/go-stream-mp3/internal/frameheader"
-	"github.com/dece/go-stream-mp3/internal/imdct"
-	"github.com/dece/go-stream-mp3/internal/maindata"
-	"github.com/dece/go-stream-mp3/internal/sideinfo"
+	"github.com/dece2183/go-stream-mp3/internal/bits"
+	"github.com/dece2183/go-stream-mp3/internal/consts"
+	"github.com/dece2183/go-stream-mp3/internal/frameheader"
+	"github.com/dece2183/go-stream-mp3/internal/imdct"
+	"github.com/dece2183/go-stream-mp3/internal/maindata"
+	"github.com/dece2183/go-stream-mp3/internal/sideinfo"
 )
 
 var (

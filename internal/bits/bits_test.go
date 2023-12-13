@@ -17,7 +17,7 @@ package bits_test
 import (
 	"testing"
 
-	. "github.com/dece/go-stream-mp3/internal/bits"
+	. "github.com/dece2183/go-stream-mp3/internal/bits"
 )
 
 func TestBits(t *testing.T) {
