@@ -18,9 +18,9 @@ import (
 	"errors"
 	"io"
 
-	"github.com/hajimehoshi/go-mp3/internal/consts"
-	"github.com/hajimehoshi/go-mp3/internal/frame"
-	"github.com/hajimehoshi/go-mp3/internal/frameheader"
+	"github.com/dece/go-stream-mp3/internal/consts"
+	"github.com/dece/go-stream-mp3/internal/frame"
+	"github.com/dece/go-stream-mp3/internal/frameheader"
 )
 
 // A Decoder is a MP3-decoded stream.
@@ -30,7 +30,6 @@ type Decoder struct {
 	source        *source
 	sampleRate    int
 	length        int64
-	frameStarts   []int64
 	buf           []byte
 	frame         *frame.Frame
 	pos           int64
@@ -99,7 +98,7 @@ func (d *Decoder) Seek(offset int64, whence int) (int64, error) {
 	// because the previous frame can affect the targeted frame.
 	if f > 0 {
 		f--
-		if _, err := d.source.Seek(d.frameStarts[f], 0); err != nil {
+		if _, err := d.source.Seek(d.bytesPerFrame*f, 0); err != nil {
 			return 0, err
 		}
 		if err := d.readFrame(); err != nil {
@@ -115,7 +114,7 @@ func (d *Decoder) Seek(offset int64, whence int) (int64, error) {
 		}
 		d.buf = d.buf[pos:]
 	} else {
-		if _, err := d.source.Seek(d.frameStarts[f], 0); err != nil {
+		if _, err := d.source.Seek(d.bytesPerFrame*f, 0); err != nil {
 			return 0, err
 		}
 		if err := d.readFrame(); err != nil {
@@ -142,7 +141,7 @@ func (d *Decoder) ensureFrameStartsAndLength() error {
 		return nil
 	}
 
-	if _, ok := d.source.reader.(io.Seeker); !ok {
+	if _, ok := d.source.reader.(SizedSeeker); !ok {
 		return nil
 	}
 
@@ -158,40 +157,23 @@ func (d *Decoder) ensureFrameStartsAndLength() error {
 	if err := d.source.skipTags(); err != nil {
 		return err
 	}
-	l := int64(0)
-	for {
-		h, pos, err := frameheader.Read(d.source, d.source.pos)
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			if _, ok := err.(*consts.UnexpectedEOF); ok {
-				// TODO: Log here?
-				break
-			}
-			return err
-		}
-		d.frameStarts = append(d.frameStarts, pos)
-		d.bytesPerFrame = int64(h.BytesPerFrame())
-		l += d.bytesPerFrame
 
-		framesize, err := h.FrameSize()
-		if err != nil {
-			return err
-		}
-		buf := make([]byte, framesize-4)
-		if _, err := d.source.ReadFull(buf); err != nil {
-			if err == io.EOF {
-				break
-			}
-			return err
-		}
+	d.length, err = d.source.Length()
+	if err != nil {
+		return err
 	}
-	d.length = l
+
+	h, _, err := frameheader.Read(d.source, d.source.pos)
+	if err != nil {
+		return err
+	}
+
+	d.bytesPerFrame = int64(h.BytesPerFrame())
 
 	if _, err := d.source.Seek(pos, io.SeekStart); err != nil {
 		return err
 	}
+
 	return nil
 }
 

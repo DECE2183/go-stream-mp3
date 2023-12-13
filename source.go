@@ -26,9 +26,9 @@ type source struct {
 }
 
 func (s *source) Seek(position int64, whence int) (int64, error) {
-	seeker, ok := s.reader.(io.Seeker)
+	seeker, ok := s.reader.(SizedSeeker)
 	if !ok {
-		return 0, errors.New("mp3: source must be io.Seeker")
+		return 0, errors.New("mp3: source must be mp3.SizedSeeker")
 	}
 	s.buf = nil
 	n, err := seeker.Seek(position, whence)
@@ -37,6 +37,14 @@ func (s *source) Seek(position int64, whence int) (int64, error) {
 	}
 	s.pos = n
 	return n, nil
+}
+
+func (s *source) Length() (int64, error) {
+	seeker, ok := s.reader.(SizedSeeker)
+	if !ok {
+		return 0, errors.New("mp3: source must be mp3.SizedSeeker")
+	}
+	return seeker.Length(), nil
 }
 
 func (s *source) skipTags() error {
