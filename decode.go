@@ -109,17 +109,14 @@ func (d *Decoder) Seek(offset int64, whence int) (int64, error) {
 		if _, err := d.source.Seek(d.bytesPerFrame*f, 0); err != nil {
 			return 0, err
 		}
-		if err := d.readFrame(); err != nil {
-			return 0, err
-		}
-		if err := d.readFrame(); err != nil {
-			return 0, err
-		}
+
 		pos := d.bytesPerFrame + (d.pos % d.bytesPerFrame)
-		l := int64(len(d.buf))
-		if pos > l {
-			pos = l
+		for pos > int64(len(d.buf)) {
+			if err := d.readFrame(); err != nil {
+				return 0, err
+			}
 		}
+
 		d.buf = d.buf[pos:]
 	} else {
 		if _, err := d.source.Seek(d.bytesPerFrame*f, 0); err != nil {
