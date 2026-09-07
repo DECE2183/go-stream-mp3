@@ -163,7 +163,11 @@ func getScaleFactorsMpeg2(m *bits.Bits, header frameheader.FrameHeader, sideInfo
 		} else {
 			for x := 0; x < 13; x++ {
 				for i := 0; i < 3; i++ {
-					md.ScalefacS[0][ch][x][i] = scaleFactors[(x*3)+i]
+					factorIdx := (x * 3) + i
+					if factorIdx >= len(scaleFactors) {
+						continue
+					}
+					md.ScalefacS[0][ch][x][i] = scaleFactors[factorIdx]
 				}
 			}
 		}
